@@ -205,6 +205,32 @@ public class Student {
 			e.printStackTrace();
 		}
 	}
+	
+	public void case8() {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			con = DriverManager.getConnection(JdbcURL, Username, password);
+			Statement smt=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+
+			String q= "select st_no from StudentProject group by st_no having COUNT(designation) > 1;";
+			//to execute query
+			ResultSet rs=smt.executeQuery(q);
+			//to print the resultset on console
+			if(rs.next()){ 
+				do {
+					System.out.println("Studnet Name:"+rs.getString(1) );
+				}while(rs.next());
+			}
+			else{
+				System.out.println("Record Not Found...");
+			}
+			con.close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void case9() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -230,6 +256,31 @@ public class Student {
 		}
 	}
 	
+	public void case10() {
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			con = DriverManager.getConnection(JdbcURL, Username, password);
+			Statement smt=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+
+			String q= "";
+			//to execute query
+			ResultSet rs=smt.executeQuery(q);
+			//to print the resultset on console
+			if(rs.next()){ 
+				do {
+					System.out.println(rs.getString(1)+","+rs.getString(2)+","+rs.getDate(3)+","+rs.getDate(4));
+				}while(rs.next());
+			}
+			else{
+				System.out.println("Record Not Found...");
+			}
+			con.close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 
 
 	public static void main(String args[]) {
@@ -273,11 +324,13 @@ public class Student {
 				student.case7();
 				break;
 			case 8:
+				student.case8();
 				break;
 			case 9:
 				student.case9();
 				break;
 			case 10:
+				student.case10();
 				break;
 			case 11:
 				System.exit(0);
