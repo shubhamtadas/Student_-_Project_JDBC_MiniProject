@@ -70,7 +70,7 @@ public class Student {
 			con = DriverManager.getConnection(JdbcURL, Username, password);
 			Statement smt=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
 
-			String q= "select * from StudentProject where prj_no = 'P01';";
+			String q= "select COUNT from StudentProject where prj_no = 'P01';";
 			//to execute query
 			ResultSet rs=smt.executeQuery(q);
 			int n=0;
@@ -212,13 +212,13 @@ public class Student {
 			con = DriverManager.getConnection(JdbcURL, Username, password);
 			Statement smt=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
 
-			String q= "select st_no from StudentProject group by st_no having COUNT(designation) > 1;";
+			String q= "select st_no,prj_no from StudentProject group by prj_no having COUNT(designation) > 1;";
 			//to execute query
 			ResultSet rs=smt.executeQuery(q);
 			//to print the resultset on console
 			if(rs.next()){ 
 				do {
-					System.out.println("Studnet Name:"+rs.getString(1) );
+					System.out.println("Studnet: "+rs.getString(1)+" in "+rs.getString(2));
 				}while(rs.next());
 			}
 			else{
@@ -262,13 +262,13 @@ public class Student {
 			con = DriverManager.getConnection(JdbcURL, Username, password);
 			Statement smt=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
 
-			String q= "";
+			String q= "select st_no from Studentproject group by prj_no having COUNT(Distinct(st_no))=3;";
 			//to execute query
 			ResultSet rs=smt.executeQuery(q);
 			//to print the resultset on console
 			if(rs.next()){ 
 				do {
-					System.out.println(rs.getString(1)+","+rs.getString(2)+","+rs.getDate(3)+","+rs.getDate(4));
+					System.out.println(rs.getString(1));
 				}while(rs.next());
 			}
 			else{
