@@ -70,21 +70,18 @@ public class Student {
 			con = DriverManager.getConnection(JdbcURL, Username, password);
 			Statement smt=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
 
-			String q= "select COUNT from StudentProject where prj_no = 'P01';";
-			//to execute query
+			String q= "select COUNT(*) from StudentProject where prj_no = 'P01';";
+
 			ResultSet rs=smt.executeQuery(q);
-			int n=0;
-			//to print the resultset on console
+			
 			if(rs.next()){ 
 				do{
-					++n;
-				System.out.println(rs.getString(1)+","+rs.getString(2)+","+rs.getString(3));
+				System.out.println("Total number of students in 'P01': "+rs.getInt(1));
 				}while(rs.next());
 			}
 			else{
 				System.out.println("Record Not Found...");
 			}
-			System.out.println("Total number of students in 'P01': "+n);
 			con.close();
 			
 		} catch (Exception e) {
