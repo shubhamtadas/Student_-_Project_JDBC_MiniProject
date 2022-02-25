@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 public class Student {
@@ -154,7 +157,8 @@ public class Student {
 			con = DriverManager.getConnection(JdbcURL, Username, password);
 			Statement smt=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
 
-			String q= "select st_no,st_name,st_dob from student where st_no In(select st_no from studentproject where prj_no='P02');";
+			String q= "Select student.st_no,student.st_name, DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),student.st_dob)), '%Y')+0 as age From student, "
+					+ "studentproject where student.st_no = studentproject.st_no and studentproject.prj_no = 'P02' ";
 			//to execute query
 			ResultSet rs=smt.executeQuery(q);
 			int n=0;
@@ -162,7 +166,7 @@ public class Student {
 			if(rs.next()){ 
 				do{
 					++n;
-				System.out.println(rs.getString(1)+","+rs.getString(2)+","+rs.getString(3));
+				System.out.println(rs.getString(1)+","+rs.getString(2)+","+rs.getInt(3));
 				}while(rs.next());
 			}
 			else{
@@ -209,17 +213,22 @@ public class Student {
 			con = DriverManager.getConnection(JdbcURL, Username, password);
 			Statement smt=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
 
-			String q= "select st_no,prj_no from StudentProject group by st_no,prj_no having (COUNT(designation)>1);";
+			String q= "select st_no,COUNT(designation) from StudentProject group by st_no,prj_no";
 			//to execute query
 			ResultSet rs=smt.executeQuery(q);
-			//to print the resultset on console
+			
+			HashMap<String, Integer> hm = new HashMap<String, Integer>();
 			if(rs.next()){ 
-				do {
-					System.out.println("Studnet: "+rs.getString(1)+" in "+rs.getString(2));
-				}while(rs.next());
+				hm.put(rs.getString(1), rs.getInt(2));
 			}
 			else{
 				System.out.println("Record Not Found...");
+			}
+			int maxDesignation = (Collections.max(hm.values()));
+			for (Entry<String, Integer> entry : hm.entrySet()) {
+				if(entry.getValue()==maxDesignation) {
+					System.out.println(entry.getKey()+" "+entry.getValue());
+				}
 			}
 			con.close();
 		}
@@ -255,6 +264,7 @@ public class Student {
 	
 	public void case10() {
 		try {
+			
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			con = DriverManager.getConnection(JdbcURL, Username, password);
 			Statement smt=con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
